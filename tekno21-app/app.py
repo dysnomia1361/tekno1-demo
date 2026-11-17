@@ -126,8 +126,8 @@ def show_maps(img: Image.Image):
 
 # ---------- Encabezado ----------
 st.title("Clasificación de accidente cerebrovascular en CT")
-st.caption("Prototipo de investigación: modelo híbrido CNN (ResNet18) + Transformer entrenado con Tekno21. (Inme Yok/Sin derrame, Iskemi/Isquemia, Kanama/ACV)")
-st.warning("Solo demostrativo. **No es un dispositivo médico** y no debe usarse para diagnóstico.")
+st.caption("Prototipo de innovación: modelo híbrido CNN (ResNet18) + Transformer entrenado con Tekno21. (Inme Yok/Sin derrame, Iskemi/Isquemia, Kanama/ACV)")
+st.warning("Aclaración: Solo fines demostrativos. **No es un dispositivo médico** y no debe usarse para diagnóstico.")
 
 tab1, tab2 = st.tabs([" Predicciones vs. labels reales", "Probar una imagen"])
 
@@ -162,7 +162,7 @@ with tab1:
 
     prob_cols = [f"P({n})" for n in class_names]
     styled = (view.style
-              .apply(lambda r: ["background-color: rgba(220,53,69,0.18)" if r["Resultado"].startswith("❌") else ""
+              .apply(lambda r: ["background-color: rgba(220,53,69,0.18)" if r["Resultado"].startswith("N") else ""
                                 for _ in r], axis=1)
               .format({"Confianza": "{:.1%}", **{c: "{:.1%}" for c in prob_cols}}))
 
