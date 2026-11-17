@@ -23,7 +23,7 @@ MEAN, STD = [0.485, 0.456, 0.406], [0.229, 0.224, 0.225]
 TEST_METRICS = None   # opcional, p. ej. {"f1_macro": 0.93}: cifras del test completo del notebook
 # =============================================================================
 
-st.set_page_config(page_title="Clasificador de ACV en CT", page_icon="🧠", layout="wide")
+st.set_page_config(page_title="Clasificador de ACV en CT", page_icon="", layout="wide")
 
 # ---------- Verificaciones iniciales ----------
 if not WEIGHTS.exists():
@@ -104,7 +104,7 @@ def predict_samples():
         "Predicción": [class_names[i] for i in probs.argmax(1)],
         "Confianza": probs.max(1),
     })
-    df["Resultado"] = np.where(df["Real"] == df["Predicción"], "✅ Correcto", "❌ Error")
+    df["Resultado"] = np.where(df["Real"] == df["Predicción"], " Correcto", " Error")
     for i, n in enumerate(class_names):
         df[f"P({n})"] = probs[:, i]
 
@@ -126,10 +126,10 @@ def show_maps(img: Image.Image):
 
 # ---------- Encabezado ----------
 st.title("🧠 Clasificación de accidente cerebrovascular en CT")
-st.caption("Prototipo de investigación: modelo híbrido CNN (ResNet18) + Transformer entrenado con Tekno21.")
+st.caption("Prototipo de investigación: modelo híbrido CNN (ResNet18) + Transformer entrenado con Tekno21. (Inme Yok/Sin derrame, Iskemi/Isquemia, Kanama/ACV)")
 st.warning("Solo demostrativo. **No es un dispositivo médico** y no debe usarse para diagnóstico.")
 
-tab1, tab2 = st.tabs(["📊 Predicciones vs. labels reales", "🔍 Probar una imagen"])
+tab1, tab2 = st.tabs([" Predicciones vs. labels reales", "Probar una imagen"])
 
 # ---------- Pestaña 1: tabla comparativa ----------
 with tab1:
@@ -139,7 +139,7 @@ with tab1:
     m1.metric("Muestras", len(df))
     m2.metric("Accuracy", f"{accuracy_score(df['Real'], df['Predicción']):.1%}")
     m3.metric("F1 macro", f"{f1_score(df['Real'], df['Predicción'], average='macro', labels=class_names, zero_division=0):.3f}")
-    m4.metric("Errores", int((df['Resultado'] == '❌ Error').sum()))
+    m4.metric("Errores", int((df['Resultado'] == ' Error').sum()))
 
     caption = ("Las muestras son un subconjunto estratificado del test set, así que estas cifras "
                "no coinciden necesariamente con las del test completo")
@@ -155,9 +155,9 @@ with tab1:
 
     view = df[df["Real"].isin(sel_classes)]
     if outcome == "Solo correctos":
-        view = view[view["Resultado"].str.startswith("✅")]
+        view = view[view["Resultado"].str.startswith("Y")]
     elif outcome == "Solo errores":
-        view = view[view["Resultado"].str.startswith("❌")]
+        view = view[view["Resultado"].str.startswith("N")]
     view = view.reset_index(drop=True)
 
     prob_cols = [f"P({n})" for n in class_names]
@@ -170,7 +170,7 @@ with tab1:
     event = st.dataframe(styled, use_container_width=True, hide_index=True,
                          on_select="rerun", selection_mode="single-row")
 
-    st.download_button("⬇️ Descargar tabla (CSV)", view.to_csv(index=False).encode("utf-8"),
+    st.download_button("Descargar tabla (CSV)", view.to_csv(index=False).encode("utf-8"),
                        "comparacion_predicciones.csv", "text/csv")
 
     if event.selection.rows:
@@ -205,7 +205,7 @@ with tab2:
         c1, c2 = st.columns(2)
         c1.metric("Clase predicha", class_names[pred], f"{probs[pred]:.1%} de confianza")
         if true_opt != "— desconocido —":
-            c2.metric("Label real", true_opt, "✅ coincide" if true_opt == class_names[pred] else "❌ no coincide")
+            c2.metric("Label real", true_opt, " coincide" if true_opt == class_names[pred] else " no coincide")
         if probs[pred] < 0.60:
             st.error("Confianza baja: resultado poco fiable; la imagen podría estar fuera de la distribución de entrenamiento.")
         st.bar_chart(pd.DataFrame({"Probabilidad": probs}, index=class_names))
