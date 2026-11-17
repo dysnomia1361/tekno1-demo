@@ -125,7 +125,7 @@ def show_maps(img: Image.Image):
 
 
 # ---------- Encabezado ----------
-st.title("🧠 Clasificación de accidente cerebrovascular en CT")
+st.title("Clasificación de accidente cerebrovascular en CT")
 st.caption("Prototipo de investigación: modelo híbrido CNN (ResNet18) + Transformer entrenado con Tekno21. (Inme Yok/Sin derrame, Iskemi/Isquemia, Kanama/ACV)")
 st.warning("Solo demostrativo. **No es un dispositivo médico** y no debe usarse para diagnóstico.")
 
